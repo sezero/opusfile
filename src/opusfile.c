@@ -3174,6 +3174,16 @@ int op_read_float_stereo(OggOpusFile *_of,float *_pcm,int _buf_size){
   static __inline long int op_float2int(float _x) {
     return _mm_cvtss_si32(_mm_load_ss(&_x));
   }
+# elif defined(__WATCOMC__) && defined(__386__)
+   extern long int lrintf (float);
+#  define op_float2int(_x) (lrintf(_x))
+#pragma aux lrintf = \
+    "push  eax" \
+    "fistp dword ptr [esp]" \
+    "pop   eax" \
+    parm [8087] \
+    value [eax] \
+    modify exact [eax];
 # elif defined(OP_HAVE_LRINTF)
 #  define op_float2int(_x) (lrintf(_x))
 # else
