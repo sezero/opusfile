@@ -64,6 +64,8 @@ static int op_fread(void *_stream,unsigned char *_ptr,int _buf_size){
 static int op_fseek(void *_stream,opus_int64 _offset,int _whence){
 #if defined(__WATCOMC__)
   return _fseeki64((FILE *)_stream,_offset,_whence);
+#elif defined(__MORPHOS__)
+  return fseek((FILE *)_stream,(long)_offset,_whence);
 #elif defined(__EMX__) && !(defined(__INNOTEK_LIBC__)||defined(__KLIBC__))
   return fseek((FILE *)_stream,(long)_offset,_whence);
 #elif defined(_WIN32)
@@ -110,6 +112,8 @@ static int op_fseek(void *_stream,opus_int64 _offset,int _whence){
 static opus_int64 op_ftell(void *_stream){
 #if defined(__WATCOMC__)
   return _ftelli64((FILE *)_stream);
+#elif defined(__MORPHOS__)
+  return ftell((FILE *)_stream);
 #elif defined(__EMX__) && !(defined(__INNOTEK_LIBC__)||defined(__KLIBC__))
   return ftell((FILE *)_stream);
 #elif defined(_WIN32)
