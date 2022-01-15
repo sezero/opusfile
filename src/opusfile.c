@@ -3193,6 +3193,19 @@ int op_read_float_stereo(OggOpusFile *_of,float *_pcm,int _buf_size){
      return _val;
    }
 #  define op_float2int(_x) (lrintf_inl(_x))
+# elif defined(__GNUC__) && (defined(__PPC__) || defined(__ppc__) || defined(__powerpc__))
+   static __inline__ long int op_float2int(register float _x) {
+     int res[2];
+     __asm__ __volatile__
+     (
+         "fctiw %1, %1\n\t"
+         "stfd %1, %0"
+         : "=m" (res)    /* Output */
+         : "f" (_x)      /* Input */
+         : "memory"
+     );
+     return res[1];
+   }
 # else
 #  define op_float2int(_x) ((int)((_x)+((_x)<0?-0.5F:0.5F)))
 # endif
