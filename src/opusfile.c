@@ -3186,6 +3186,13 @@ int op_read_float_stereo(OggOpusFile *_of,float *_pcm,int _buf_size){
     modify exact [eax];
 # elif defined(OP_HAVE_LRINTF)
 #  define op_float2int(_x) (lrintf(_x))
+# elif defined(__GNUC__) && defined(__i386__)
+   static __inline long lrintf_inl(float _x) {
+     long _val;
+     __asm__ __volatile__ ("fistpl %0" : "=m" (_val) : "t" (_x) : "st");
+     return _val;
+   }
+#  define op_float2int(_x) (lrintf_inl(_x))
 # else
 #  define op_float2int(_x) ((int)((_x)+((_x)<0?-0.5F:0.5F)))
 # endif
