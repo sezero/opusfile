@@ -21,7 +21,7 @@ AC_SYS_LARGEFILE
 
 AM_INIT_AUTOMAKE([1.11 foreign no-define dist-zip subdir-objects])
 AM_MAINTAINER_MODE([enable])
-LT_INIT
+LT_INIT([win32-dll])
 
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
